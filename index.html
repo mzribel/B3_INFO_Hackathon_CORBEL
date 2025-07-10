@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>🌿 Explore l'Éco-Futur</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #0f0f2b, #1e1e3f);
+      color: #fff;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+      background: #14142b;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      font-size: 2.5rem;
+      color: #00ffd5;
+      text-shadow: 0 0 8px #00ffd5;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+      opacity: 0.85;
+    }
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    section {
+      background: #29294a;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 20px rgba(0,255,213,0.15);
+    }
+    h2 {
+      color: #00ffd5;
+      margin-bottom: 0.5rem;
+    }
+    a {
+      color: #66fff1;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #14142b;
+      font-size: 0.9rem;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌱 Bienvenue dans l'Éco-Futur</h1>
+    <p id="subtitle">Découvre des expériences interactives pour un monde plus vert 🌍</p>
+  </header>
+  <main>
+    <section>
+      <h2>📅 Ma Semaine Écolo</h2>
+      <p><a href="pages/semaine.html">Relève un défi chaque jour</a></p>
+    </section>
+    <section>
+      <h2>🍽️ Recettes anti-gaspi</h2>
+      <p><a href="pages/frigo.html">Transforme tes restes en plats délicieux</a></p>
+    </section>
+    <section>
+      <h2>💬 Prompts IA pour la planète</h2>
+      <p><a href="pages/prompts.html">Inspire-toi d'exemples pour bien utiliser l’IA</a></p>
+    </section>
+    <section>
+      <h2>🧠 Quizz Écologie</h2>
+      <p><a href="pages/quizz.html">Teste tes connaissances vertes 🌿</a></p>
+    </section>
+  </main>
+  <footer>
+    <p>Projet IA4Green 🌍 – Sensibilisation ludique via l’intelligence artificielle</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.style.opacity = 1;
+      const subtitle = document.getElementById('subtitle');
+      const fullText = subtitle.textContent;
+      subtitle.textContent = '';
+      let i = 0;
+      const speed = 40;
+      const typer = setInterval(() => {
+        subtitle.textContent += fullText.charAt(i);
+        i++;
+        if (i >= fullText.length) clearInterval(typer);
+      }, speed);
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) e.target.classList.add('visible');
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('section').forEach(el => {
+        el.classList.add('reveal');
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>

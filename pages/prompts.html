@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>💬 Prompts IA Écologiques</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #1e1e2f;
+      color: #eee;
+      padding: 2rem;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    h1 {
+      text-align: center;
+      color: #00ffd5;
+      font-size: 2rem;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    input[type="text"], input[type="search"] {
+      flex: 1;
+      padding: 0.8rem;
+      background: #2c2c44;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.8rem 1.2rem;
+      background: #00ffd5;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #29294a;
+      border-left: 4px solid #00ffd5;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+    li:hover {
+      transform: translateY(-4px);
+    }
+    .tooltip {
+      background: #333;
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      position: absolute;
+      top: -2rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .copy-btn:hover .tooltip {
+      opacity: 1;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    a {
+      color: #00ffd5;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="title">💬 Inspirez votre IA pour l’environnement</h1>
+    <p>Explorez des exemples ou ajoutez vos propres idées pour générer des prompts utiles à la planète 🌍</p>
+
+    <div class="controls">
+      <input type="search" id="search" placeholder="🔍 Rechercher un mot-clé...">
+      <input type="text" id="new-prompt" placeholder="➕ Ajouter un prompt...">
+      <button id="add-btn">Ajouter</button>
+    </div>
+
+    <ul id="prompt-list">
+      <li data-text="Donne-moi 3 astuces pour réduire ma consommation d'eau.">
+        <span>💧 Donne-moi 3 astuces pour réduire ma consommation d'eau.</span>
+        <button class="copy-btn">📋<span class="tooltip">Copié !</span></button>
+      </li>
+      <li data-text="Écris un tweet sur le recyclage des déchets alimentaires.">
+        <span>♻️ Écris un tweet sur le recyclage des déchets alimentaires.</span>
+        <button class="copy-btn">📋<span class="tooltip">Copié !</span></button>
+      </li>
+      <li data-text="Trouve une activité écolo pour des enfants.">
+        <span>🌿 Trouve une activité écolo pour des enfants.</span>
+        <button class="copy-btn">📋<span class="tooltip">Copié !</span></button>
+      </li>
+    </ul>
+
+    <footer>
+      <a href="../index.html">← Retour à l'accueil</a>
+    </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.style.opacity = 1;
+
+      const title = document.getElementById('title');
+      const fullText = title.textContent;
+      title.textContent = '';
+      let i = 0;
+      const typer = setInterval(() => {
+        title.textContent += fullText.charAt(i);
+        i++;
+        if (i >= fullText.length) clearInterval(typer);
+      }, 40);
+
+      // Reveal on scroll
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) e.target.classList.add('visible');
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('li').forEach(el => {
+        el.classList.add('reveal');
+        observer.observe(el);
+      });
+
+      // Search
+      document.getElementById('search').addEventListener('input', e => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll('#prompt-list li').forEach(li => {
+          li.style.display = li.dataset.text.toLowerCase().includes(q) ? 'flex' : 'none';
+        });
+      });
+
+      // Add prompt
+      document.getElementById('add-btn').addEventListener('click', () => {
+        const input = document.getElementById('new-prompt');
+        const value = input.value.trim();
+        if (!value) return;
+        const li = document.createElement('li');
+        li.dataset.text = value;
+        li.innerHTML = `<span>💡 ${value}</span><button class="copy-btn">📋<span class="tooltip">Copié !</span></button>`;
+        document.getElementById('prompt-list').appendChild(li);
+        li.classList.add('reveal');
+        observer.observe(li);
+        input.value = '';
+      });
+
+      // Copier dans presse-papier
+      document.getElementById('prompt-list').addEventListener('click', e => {
+        if (!e.target.closest('.copy-btn')) return;
+        const btn = e.target.closest('.copy-btn');
+        const text = btn.closest('li').dataset.text;
+        navigator.clipboard.writeText(text);
+        const tooltip = btn.querySelector('.tooltip');
+        tooltip.textContent = 'Copié !';
+      });
+    });
+  </script>
+</body>
+</html>
